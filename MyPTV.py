@@ -25,17 +25,18 @@ Street = df["indirizzo"]
 Locality = df["paese"]
 Postal_Code = df["cap"]
 
+#list where the desired information will be added
 geos = []
 
 for id_el, Street_el, Locality_el, Postal_Code_el in zip(id, Street, Locality, Postal_Code):
     
+    #here the Country is ITALY
+    #if you need to use another country, just edit Country and Country_Filter variables
     Country_Filter = "IT"
     Country = "Italy"
     indirizzo = Street_el + " " + Postal_Code_el + " " + str(Locality_el)
 
-    #here the country is ITALY
-    #if you need to use another country, just put the country name instead of Italy
-    url = "https://api.myptv.com/geocoding/v1/locations/by-address?country=Italy&locality=" + str(Locality_el) + "&postalCode=" + Postal_Code_el + "&street=" + Street_el + "&countryFilter=IT"
+    url = "https://api.myptv.com/geocoding/v1/locations/by-address?country=" + Country + "&locality=" + str(Locality_el) + "&postalCode=" + Postal_Code_el + "&street=" + Street_el + "&countryFilter=" + Country_Filter
     headers = {
         'apiKey': "YOUR_MyPTV_API_KEY"
     }
@@ -45,8 +46,7 @@ for id_el, Street_el, Locality_el, Postal_Code_el in zip(id, Street, Locality, P
     #trasformation into a json type
     a = risposta.decode('utf8').replace(" ' " , ' " ')
     json_output = json.loads(a)
-    #print(json_output)
-    #print("")
+    
     try:
         if len(json_output["locations"][0]) > 0: 
 
@@ -54,7 +54,7 @@ for id_el, Street_el, Locality_el, Postal_Code_el in zip(id, Street, Locality, P
             latitudine = json_output["locations"][0]["referencePosition"]["latitude"]
             longitudine = json_output["locations"][0]["referencePosition"]["longitude"]
             geos.append([id_el , indirizzo, latitudine, longitudine])
-            print("TROVATO --> ", Street_el)
+            print("FOUND --> ", Street_el)
     except KeyError as e:
         print("errore di tipo ", e)
         geos.append([id_el , indirizzo, "", ""])
@@ -64,6 +64,7 @@ for id_el, Street_el, Locality_el, Postal_Code_el in zip(id, Street, Locality, P
         print("NOT FOUND --> ", Street_el)
     except (http.client.HTTPException, socket.time, socket.error):
         geos.append([id_el , indirizzo, "", ""])
+        print("NOT FOUND --> ", Street_el)
         
 
 #convert the list into a dataframe
