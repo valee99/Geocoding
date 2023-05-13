@@ -58,18 +58,13 @@ for id_el, Street_el, Locality_el, Postal_Code_el in zip(id, Street, Locality, P
     except KeyError as e:
         print("errore di tipo ", e)
         geos.append([id_el , indirizzo, "", ""])
-        print("NON TROVATO --> ", Street_el)
+        print("NON FOUND --> ", Street_el)
     except gaierror:
         geos.append([id_el , indirizzo, "", ""])
-        print("NON TROVATO --> ", Street_el)
-#    except (http.client.HTTPException, socket.time, socket.error):
- #       geos.append([id_el , indirizzo, "", ""])
- #   except requests.exceptions.ConnectionError:
- #       print("")
- #   except socket.gaierror:
- #       print("")
- #   except urllib3.exceptions.NewConnectionError:
- #       print("")
+        print("NOT FOUND --> ", Street_el)
+    except (http.client.HTTPException, socket.time, socket.error):
+        geos.append([id_el , indirizzo, "", ""])
+        
 
 #convert the list into a dataframe
 dff = pd.DataFrame(
